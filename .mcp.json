@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "code-review-graph": {
+      "command": "/usr/bin/python3",
+      "args": [
+        "-m",
+        "code_review_graph",
+        "serve"
+      ],
+      "cwd": "/home/astro/Astro/Projects/claude-web-setup",
+      "type": "stdio"
+    },
+    "codebase-memory-mcp": {
+      "command": "/home/astro/.local/bin/codebase-memory-mcp",
+      "args": [],
+      "type": "stdio"
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"]
+    }
+  }
+}
