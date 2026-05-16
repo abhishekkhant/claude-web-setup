@@ -18,7 +18,6 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import {
-  Terminal,
   Play,
   Square,
   CheckCircle2,
@@ -28,7 +27,7 @@ import {
   TerminalIcon,
 } from "lucide-react";
 import { useStore } from "@/stores/useStore";
-import type { CliStatus, LaunchProfile } from "@/lib/types";
+
 import { contractPath } from "@/lib/utils";
 
 export default function CliPage() {

@@ -1,30 +1,10 @@
 import * as fs from "fs";
 import * as path from "path";
-import { expandPath, getHomeDir, generateId } from "@/lib/utils";
-import type { ClaudeSettings, McpServer, PermissionRule } from "@/lib/types";
+import { expandPath } from "@/lib/utils";
+import type { ClaudeSettings } from "@/lib/types";
 
 const CLAUDE_DIR = expandPath("~/.claude");
 const CCPM_DIR = expandPath("~/.ccpm");
-
-export function ensureDirectories(): void {
-  const dirs = [
-    CLAUDE_DIR,
-    path.join(CLAUDE_DIR, "settings"),
-    path.join(CLAUDE_DIR, "plugins"),
-    path.join(CLAUDE_DIR, "subagents"),
-    path.join(CLAUDE_DIR, "hooks"),
-    path.join(CLAUDE_DIR, "skills"),
-    CCPM_DIR,
-    path.join(CCPM_DIR, "profiles"),
-    path.join(CCPM_DIR, "projects"),
-  ];
-
-  for (const dir of dirs) {
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-  }
-}
 
 export function getClaudeDir(): string {
   return CLAUDE_DIR;
@@ -103,45 +83,5 @@ export function updateLocalSettings(settings: Partial<ClaudeSettings>): { succes
   return writeSettings({ ...current, ...settings }, "local");
 }
 
-export function getPermissionRules(): PermissionRule[] {
-  const settings = getGlobalSettings();
-  return settings.permissions || [];
-}
 
-export function updatePermissionRules(rules: PermissionRule[]): { success: boolean; error?: string } {
-  return updateGlobalSettings({ permissions: rules });
-}
 
-export function getModelOptions(): string[] {
-  return [
-    "sonnet-4.6",
-    "sonnet-4.5",
-    "sonnet-4.0",
-    "haiku-4.5",
-    "haiku-4.0",
-    "opus-4.6",
-    "opus-4.5",
-    "opus-4.0",
-  ];
-}
-
-export function getEffortOptions(): number[] {
-  return [1, 2, 3, 4, 5];
-}
-
-export function getInstalledPlugins(): string[] {
-  const pluginsDir = path.join(CLAUDE_DIR, "plugins");
-
-  if (!fs.existsSync(pluginsDir)) {
-    return [];
-  }
-
-  try {
-    const entries = fs.readdirSync(pluginsDir, { withFileTypes: true });
-    return entries
-      .filter((entry) => entry.isDirectory())
-      .map((entry) => entry.name);
-  } catch {
-    return [];
-  }
-}

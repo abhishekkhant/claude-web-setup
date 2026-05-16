@@ -1,14 +1,13 @@
-import { exec, spawn, ChildProcess } from "child_process";
+import { spawn, ChildProcess } from "child_process";
 import * as fs from "fs";
 import * as path from "path";
 import { expandPath, generateId } from "@/lib/utils";
-import type { CliStatus, CliLaunchParams, CliSession, LaunchProfile } from "@/lib/types";
+import type { CliStatus, CliLaunchParams, LaunchProfile } from "@/lib/types";
 import { getCcpmDir } from "./config";
-import { getGlobalMcpServers, getProjectMcpServersList } from "./mcp";
 
 let currentProcess: ChildProcess | null = null;
 
-export function checkClaudeInstallation(): CliStatus {
+function checkClaudeInstallation(): CliStatus {
   try {
     // Check for Claude CLI in common locations
     const possiblePaths = [
@@ -69,11 +68,6 @@ function getClaudeVersion(cliPath: string): string | undefined {
 
 export function getCliStatus(): CliStatus {
   return checkClaudeInstallation();
-}
-
-export function getCliVersion(): string | undefined {
-  const status = getCliStatus();
-  return status.version;
 }
 
 export function launchClaude(
@@ -157,10 +151,6 @@ export function stopClaude(): { success: boolean; error?: string } {
   }
 }
 
-export function isClaudeRunning(): boolean {
-  return currentProcess !== null;
-}
-
 // Profiles management
 export function getProfilesDir(): string {
   const ccpmDir = getCcpmDir();
@@ -230,27 +220,6 @@ export function createLaunchProfile(profile: Omit<LaunchProfile, "id" | "created
   }
 }
 
-export function updateLaunchProfile(id: string, updates: Partial<LaunchProfile>): {
-  success: boolean;
-  error?: string;
-} {
-  const profile = getProfile(id);
-
-  if (!profile) {
-    return { success: false, error: "Profile not found" };
-  }
-
-  const updatedProfile = { ...profile, ...updates };
-
-  try {
-    const profilePath = path.join(getProfilesDir(), `${id}.json`);
-    fs.writeFileSync(profilePath, JSON.stringify(updatedProfile, null, 2), "utf-8");
-    return { success: true };
-  } catch (error) {
-    return { success: false, error: String(error) };
-  }
-}
-
 export function deleteLaunchProfile(id: string): { success: boolean; error?: string } {
   const profile = getProfile(id);
 
@@ -267,59 +236,3 @@ export function deleteLaunchProfile(id: string): { success: boolean; error?: str
   }
 }
 
-export function launchWithProfile(
-  profileId: string,
-  projectPath: string,
-  onOutput?: (data: string) => void,
-  onError?: (data: string) => void
-): { success: boolean; sessionId?: string; error?: string } {
-  const profile = getProfile(profileId);
-
-  if (!profile) {
-    return { success: false, error: "Profile not found" };
-  }
-
-  return launchClaude(
-    {
-      projectPath,
-      model: profile.model,
-      effort: profile.effort,
-      mcpServers: profile.mcpServers,
-    },
-    onOutput,
-    onError
-  );
-}
-
-// Default profiles
-export function getDefaultProfiles(): Omit<LaunchProfile, "id" | "createdAt">[] {
-  return [
-    {
-      name: "Quick Chat",
-      model: "haiku-4.5",
-      effort: 1,
-      mcpServers: [],
-      permissions: ["read"],
-      skills: [],
-      scope: "global",
-    },
-    {
-      name: "Deep Analysis",
-      model: "sonnet-4.6",
-      effort: 5,
-      mcpServers: [],
-      permissions: ["read", "write"],
-      skills: ["explain-code"],
-      scope: "global",
-    },
-    {
-      name: "Code Review",
-      model: "sonnet-4.6",
-      effort: 3,
-      mcpServers: [],
-      permissions: ["read", "edit"],
-      skills: ["review-code"],
-      scope: "global",
-    },
-  ];
-}

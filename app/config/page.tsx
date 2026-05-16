@@ -20,7 +20,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Separator } from "@/components/ui/separator";
-import { Save, RotateCcw, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Save, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { useStore } from "@/stores/useStore";
 import { formatJson, isValidJson } from "@/lib/utils";
 import dynamic from "next/dynamic";

@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { FileText, Save, Plus, Clock } from "lucide-react";
+import { Save, Plus, Clock } from "lucide-react";
 import { useStore } from "@/stores/useStore";
 import type { MemoryFile } from "@/lib/types";
 import dynamic from "next/dynamic";

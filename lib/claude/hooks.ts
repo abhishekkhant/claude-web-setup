@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import { expandPath, generateId, parseArgsString, formatArgs } from "@/lib/utils";
+import { expandPath, generateId, parseArgsString } from "@/lib/utils";
 import type { Hook, HookFormData } from "@/lib/types";
 import { getGlobalSettings, updateGlobalSettings } from "./config";
 
